@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kássio Serpa | Portfólio</title>
+    <title>Kássio Serpa | Data Analyst & BI Engineer</title>
     
     <!-- Tipografia Premium -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,23 +21,21 @@
                         mono: ['JetBrains Mono', 'monospace'],
                     },
                     colors: {
-                        darkbg: '#0a0f1c', 
+                        darkbg: '#05080f', 
                         glassborder: 'rgba(255, 255, 255, 0.08)'
                     },
                     animation: {
-                        'blob': 'blob 10s infinite',
-                        'blob-reverse': 'blob-reverse 12s infinite',
+                        'shimmer': 'shimmer 2s infinite linear',
+                        'float': 'float 6s ease-in-out infinite',
                     },
                     keyframes: {
-                        blob: {
-                            '0%, 100%': { transform: 'translate(0px, 0px) scale(1)' },
-                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
-                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-200% 0' },
+                            '100%': { backgroundPosition: '200% 0' },
                         },
-                        'blob-reverse': {
-                            '0%, 100%': { transform: 'translate(0px, 0px) scale(1)' },
-                            '33%': { transform: 'translate(-30px, 50px) scale(1.1)' },
-                            '66%': { transform: 'translate(20px, -20px) scale(0.9)' },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
                         }
                     }
                 }
@@ -47,507 +45,474 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        body { transition: background-color 0.4s ease, color 0.4s ease; }
+        body { transition: background-color 0.4s ease, color 0.4s ease; cursor: none; }
+        
+        /* Glassmorphism Pro */
         .glass { 
-            background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.3); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
         }
         .dark .glass { 
-            background: rgba(15, 23, 42, 0.5); border: 1px solid theme('colors.glassborder'); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            background: rgba(15, 23, 42, 0.3); border: 1px solid theme('colors.glassborder'); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
         }
+
+        /* Efeito de Brilho no Card */
+        .shimmer-effect::before {
+            content: ""; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+            transform: skewX(-25deg); transition: 0.7s;
+        }
+        .shimmer-effect:hover::before { left: 125%; }
+
+        /* Canvas de Partículas */
+        #data-mesh-canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; pointer-events: none; opacity: 0.4;
+        }
+
         .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
         .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* Barra de Scroll Custom */
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        .dark ::-webkit-scrollbar-thumb { background: #334155; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-        .dark ::-webkit-scrollbar-thumb:hover { background: #475569; }
-
-        /* --- Elementos Adicionais CSS Premium --- */
+        ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
         
-        /* Barra de Progresso de Scroll */
         #scroll-progress {
-            position: fixed; top: 0; left: 0; height: 4px;
-            background: linear-gradient(to right, #3b82f6, #10b981);
-            z-index: 9999; width: 0%; border-radius: 0 2px 2px 0;
-            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
-            transition: width 0.1s ease-out;
+            position: fixed; top: 0; left: 0; height: 3px;
+            background: linear-gradient(to right, #3b82f6, #6366f1);
+            z-index: 10000; width: 0%; transition: width 0.1s;
         }
 
-        /* Cursor Personalizado (Apenas para Desktop com rato) */
+        /* Cursor Custom */
         @media (pointer: fine) {
-            body, a, button, select, .cursor-pointer { cursor: none !important; }
-            .cursor-dot, .cursor-outline {
-                position: fixed; top: 0; left: 0;
-                transform: translate(-50%, -50%);
-                border-radius: 50%; z-index: 9999; pointer-events: none;
+            .cursor-dot {
+                position: fixed; top: 0; left: 0; width: 8px; height: 8px;
+                background-color: #3b82f6; border-radius: 50%; z-index: 10001; pointer-events: none;
+                transform: translate(-50%, -50%); transition: transform 0.1s;
             }
-            .cursor-dot { width: 8px; height: 8px; background-color: #3b82f6; }
             .cursor-outline {
-                width: 40px; height: 40px; border: 2px solid rgba(59, 130, 246, 0.5);
-                transition: width 0.2s, height 0.2s, background-color 0.2s;
+                position: fixed; top: 0; left: 0; width: 40px; height: 40px;
+                border: 2px solid rgba(59, 130, 246, 0.5); border-radius: 50%; z-index: 10000;
+                pointer-events: none; transform: translate(-50%, -50%);
             }
         }
-        @media (pointer: coarse) {
-            .cursor-dot, .cursor-outline { display: none !important; }
-        }
-
-        /* Efeito 3D Tilt nos Cartões */
-        .tilt-card { transform-style: preserve-3d; will-change: transform; }
-        .tilt-content { transform: translateZ(40px); }
-        .tilt-bg { transform: translateZ(10px); }
     </style>
 </head>
-<body class="font-sans antialiased selection:bg-blue-500/30 bg-slate-50 text-slate-800 dark:bg-darkbg dark:text-slate-50 relative overflow-x-hidden">
+<body class="font-sans antialiased bg-slate-50 text-slate-800 dark:bg-darkbg dark:text-slate-50 relative overflow-x-hidden">
 
-    <!-- Elementos Adicionais HTML -->
+    <!-- Background Interativo -->
+    <canvas id="data-mesh-canvas"></canvas>
     <div id="scroll-progress"></div>
     <div class="cursor-dot" id="cursor-dot"></div>
     <div class="cursor-outline" id="cursor-outline"></div>
 
-    <div class="fixed inset-0 z-[-1] pointer-events-none bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-50 via-slate-50 to-slate-100 dark:from-[#111a30] dark:via-[#0a0f1c] dark:to-[#05080f] transition-colors duration-500"></div>
-
     <nav class="fixed w-full z-50 glass top-0 transition-all duration-300" id="navbar">
-        <div class="max-w-7xl mx-auto px-5 sm:px-6 py-4 flex justify-between items-center">
-            <a href="#" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-emerald-500 dark:from-blue-400 dark:to-emerald-400 bg-clip-text text-transparent tracking-tighter hover:scale-105 transition-transform duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-500 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent tracking-tighter hover:scale-105 transition-transform duration-300">
                 &lt;Dev.Serpa /&gt;
             </a>
             
             <div class="hidden md:flex space-x-8 text-sm font-semibold uppercase tracking-widest text-slate-600 dark:text-slate-300">
-                <a href="#sobre" class="relative group hover:text-blue-600 dark:hover:text-blue-400 transition-colors py-1" data-i18n="nav_about">
-                    Sobre <span class="absolute bottom-0 left-0 w-0 h-[2px] bg-blue-500 transition-all duration-300 group-hover:w-full"></span>
-                </a>
-                <a href="#projetos" class="relative group hover:text-blue-600 dark:hover:text-blue-400 transition-colors py-1" data-i18n="nav_projects">
-                    Projetos <span class="absolute bottom-0 left-0 w-0 h-[2px] bg-blue-500 transition-all duration-300 group-hover:w-full"></span>
-                </a>
-                <a href="#contato" class="relative group hover:text-blue-600 dark:hover:text-blue-400 transition-colors py-1" data-i18n="nav_contact">
-                    Contacto <span class="absolute bottom-0 left-0 w-0 h-[2px] bg-blue-500 transition-all duration-300 group-hover:w-full"></span>
-                </a>
+                <a href="#sobre" class="relative group hover:text-blue-500 transition-colors py-1" data-i18n="nav_about">Sobre</a>
+                <a href="#projetos" class="relative group hover:text-blue-500 transition-colors py-1" data-i18n="nav_projects">Projetos</a>
+                <a href="#contato" class="relative group hover:text-blue-500 transition-colors py-1" data-i18n="nav_contact">Contacto</a>
             </div>
             
-            <div class="hidden md:flex items-center space-x-5 text-lg text-slate-500 dark:text-slate-400">
-                <select class="lang-switch-select bg-transparent text-sm font-bold uppercase focus:outline-none cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                    <option value="pt" class="bg-white dark:bg-slate-800 text-slate-800 dark:text-white">PT</option>
-                    <option value="en" class="bg-white dark:bg-slate-800 text-slate-800 dark:text-white">EN</option>
-                    <option value="es" class="bg-white dark:bg-slate-800 text-slate-800 dark:text-white">ES</option>
+            <div class="flex items-center space-x-6">
+                <select class="lang-switch-select bg-transparent text-sm font-bold uppercase focus:outline-none cursor-pointer">
+                    <option value="pt">PT</option>
+                    <option value="en">EN</option>
+                    <option value="es">ES</option>
                 </select>
-
-                <button class="theme-toggle-btn focus:outline-none hover:text-amber-500 dark:hover:text-yellow-300 transition-transform duration-300 hover:rotate-12 rounded-full p-1" aria-label="Alternar Tema">
+                <button class="theme-toggle-btn text-xl hover:scale-110 transition-transform">
                     <i class="fas fa-moon dark:hidden"></i>
                     <i class="fas fa-sun hidden dark:inline"></i>
                 </button>
-
-                <div class="w-px h-5 bg-slate-300 dark:bg-slate-700 mx-1"></div>
-
-                <a href="https://github.com/kassioserpa" target="_blank" class="hover:text-slate-900 dark:hover:text-white transition-all duration-300 hover:-translate-y-1" title="GitHub"><i class="fab fa-github"></i></a>
-                <a href="https://www.linkedin.com/in/k%C3%A1ssioserpa/" target="_blank" class="hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300 hover:-translate-y-1" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
-                <a href="https://www.instagram.com/kassiosantz/" target="_blank" class="hover:text-pink-600 dark:hover:text-pink-500 transition-all duration-300 hover:-translate-y-1" title="Instagram"><i class="fab fa-instagram"></i></a>
-            </div>
-
-            <div class="flex md:hidden items-center space-x-4">
-                <button class="theme-toggle-btn text-slate-600 dark:text-slate-300 hover:text-amber-500 dark:hover:text-yellow-300 text-xl focus:outline-none z-[60]">
-                    <i class="fas fa-moon dark:hidden"></i><i class="fas fa-sun hidden dark:inline"></i>
-                </button>
-                <button id="mobile-menu-btn" class="text-slate-600 dark:text-slate-300 hover:text-blue-500 text-2xl focus:outline-none z-[60]">
-                    <i class="fas fa-bars transition-transform duration-300" id="mobile-icon"></i>
-                </button>
-            </div>
-        </div>
-
-        <div id="mobile-menu" class="fixed inset-0 bg-white/95 dark:bg-[#0a0f1c]/95 backdrop-blur-md flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 z-50">
-            <div class="flex flex-col space-y-8 text-2xl font-bold text-center">
-                <div class="mb-4">
-                    <select class="lang-switch-select bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-white text-lg font-bold uppercase py-2 px-4 rounded-xl focus:outline-none cursor-pointer">
-                        <option value="pt">Português (PT)</option><option value="en">English (EN)</option><option value="es">Español (ES)</option>
-                    </select>
-                </div>
-                <a href="#sobre" class="mobile-link text-slate-800 dark:text-white hover:text-blue-500" data-i18n="nav_about">Sobre</a>
-                <a href="#projetos" class="mobile-link text-slate-800 dark:text-white hover:text-blue-500" data-i18n="nav_projects">Projetos</a>
-                <a href="#contato" class="mobile-link text-slate-800 dark:text-white hover:text-blue-500" data-i18n="nav_contact">Contacto</a>
-                <div class="flex items-center justify-center space-x-8 mt-8 pt-8 border-t border-slate-200 dark:border-slate-800">
-                    <a href="https://github.com/kassioserpa" target="_blank" class="text-slate-600 dark:text-slate-400 hover:text-white text-3xl"><i class="fab fa-github"></i></a>
-                    <a href="https://www.linkedin.com/in/k%C3%A1ssioserpa/" target="_blank" class="text-slate-600 dark:text-slate-400 hover:text-blue-400 text-3xl"><i class="fab fa-linkedin"></i></a>
-                    <a href="https://www.instagram.com/kassiosantz/" target="_blank" class="text-slate-600 dark:text-slate-400 hover:text-pink-500 text-3xl"><i class="fab fa-instagram"></i></a>
-                </div>
             </div>
         </div>
     </nav>
 
-    <section id="sobre" class="min-h-[100svh] flex items-center pt-28 pb-12 px-5 sm:px-6 max-w-7xl mx-auto relative">
-        <div class="w-full flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16">
-            <div class="w-full lg:w-3/5 text-center lg:text-left z-10 reveal mt-4 lg:mt-0">
-                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 font-mono text-xs sm:text-sm mb-6 border border-blue-500/20">
+    <section id="sobre" class="min-h-screen flex items-center pt-28 pb-12 px-6 max-w-7xl mx-auto relative">
+        <div class="w-full flex flex-col lg:flex-row items-center justify-between gap-16">
+            <div class="w-full lg:w-3/5 text-center lg:text-left z-10 reveal">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 text-blue-400 font-mono text-xs mb-6 border border-blue-500/20">
                     <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
                     <span data-i18n="hello">Olá, o meu nome é</span>
                 </div>
                 
-                <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold mb-4 sm:mb-6 text-slate-900 dark:text-white tracking-tight sm:tracking-tighter leading-[1.1]">
+                <h1 class="text-5xl sm:text-7xl lg:text-8xl font-extrabold mb-6 text-slate-900 dark:text-white tracking-tight leading-[1.1]">
                     Kássio Serpa.<br>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-emerald-500 dark:from-blue-400 dark:to-emerald-400 text-[2rem] sm:text-5xl md:text-6xl lg:text-7xl block mt-2" data-i18n="role">Desenv. & Dados.</span>
+                    <span id="typing-role" class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-emerald-400 min-h-[1em] block mt-2"></span>
                 </h1>
                 
-                <p class="text-slate-600 dark:text-slate-400 text-base sm:text-lg md:text-xl max-w-2xl mb-8 sm:mb-10 leading-relaxed mx-auto lg:mx-0 text-center lg:text-justify font-light" data-i18n="desc">
-                    Profissional multidisciplinar com experiência em gestão administrativa e processos de licitação, aliado a competências técnicas em análise de dados e desenvolvimento digital. Atuo na intersecção entre negócios e tecnologia, utilizando ferramentas como Power BI e programação full stack para criar soluções inovadoras.
+                <p class="text-slate-600 dark:text-slate-400 text-lg md:text-xl max-w-2xl mb-10 leading-relaxed mx-auto lg:mx-0 font-light" data-i18n="desc">
+                    Vamos transformar dados em decisões inteligentes? Sou especialista em engenharia de BI e análise estatística, focado em extrair valor real de ecossistemas de informação complexos.
                 </p>
                 
-                <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-5 justify-center lg:justify-start">
-                    <a href="#projetos" class="px-6 py-4 sm:px-8 sm:py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-semibold rounded-xl hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 w-full sm:w-auto text-center active:scale-95" data-i18n="btn_projects">
+                <div class="flex flex-col sm:flex-row items-center gap-6 justify-center lg:justify-start">
+                    <a href="#projetos" class="mag-btn px-10 py-4 bg-blue-600 text-white font-bold rounded-xl hover:shadow-[0_0_20px_rgba(59,130,246,0.5)] transition-all duration-300 active:scale-95" data-i18n="btn_projects">
                         Ver Projetos
-                    </a>
-                    <a href="https://wa.me/5561995764452" target="_blank" class="px-6 py-4 sm:px-8 sm:py-4 glass text-slate-800 dark:text-slate-200 font-semibold rounded-xl hover:border-green-500 dark:hover:border-green-400 hover:-translate-y-1 transition-all duration-300 w-full sm:w-auto text-center flex items-center justify-center gap-3 active:scale-95 group">
-                        <i class="fab fa-whatsapp text-green-500 dark:text-green-400 text-xl group-hover:scale-110 transition-transform"></i> <span data-i18n="btn_wa">Falar no WhatsApp</span>
                     </a>
                 </div>
             </div>
             
             <div class="hidden lg:block lg:w-2/5 relative reveal" style="transition-delay: 200ms;">
-                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-blue-500/20 rounded-full blur-[80px] animate-blob mix-blend-multiply dark:mix-blend-lighten"></div>
-                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-emerald-500/20 rounded-full blur-[80px] animate-blob-reverse translate-x-10 -translate-y-10 mix-blend-multiply dark:mix-blend-lighten"></div>
-                
-                <div class="glass p-1 rounded-2xl relative z-10 shadow-2xl rotate-3 hover:rotate-0 transition-all duration-700 ease-out group overflow-hidden">
-                    <div class="bg-white/90 dark:bg-[#0f172a]/90 backdrop-blur-xl rounded-xl p-6 h-full w-full border border-slate-200 dark:border-slate-800/50">
-                        <div class="flex gap-2 mb-6 items-center">
-                            <div class="w-3 h-3 rounded-full bg-[#ff5f56]"></div><div class="w-3 h-3 rounded-full bg-[#ffbd2e]"></div><div class="w-3 h-3 rounded-full bg-[#27c93f]"></div>
-                            <span class="ml-3 text-xs text-slate-400 font-mono">kassio.js</span>
+                <div class="tilt-card glass shimmer-effect p-1 rounded-3xl relative z-10 shadow-2xl transition-all duration-700 ease-out group overflow-hidden">
+                    <div class="bg-slate-900/80 backdrop-blur-xl rounded-[1.4rem] border border-white/5 flex flex-col overflow-hidden">
+                        
+                        <div class="flex gap-2 p-5 items-center bg-white/5 border-b border-white/5">
+                            <div class="w-3 h-3 rounded-full bg-[#ff5f56]"></div>
+                            <div class="w-3 h-3 rounded-full bg-[#ffbd2e]"></div>
+                            <div class="w-3 h-3 rounded-full bg-[#27c93f]"></div>
+                            <span class="ml-3 text-xs text-slate-500 font-mono">portfolio_metrics.sql</span>
                         </div>
-                        <pre class="text-[13px] md:text-sm font-mono text-slate-700 dark:text-slate-300 leading-relaxed overflow-x-auto"><code class="block">
-<span class="text-[#c678dd] dark:text-[#c678dd]">const</span> <span class="text-[#61afef] dark:text-[#61afef]">developer</span> <span class="text-[#56b6c2] dark:text-[#56b6c2]">=</span> {
-  name: <span class="text-[#98c379] dark:text-[#98c379]">'Kássio Serpa'</span>,
-  role: <span class="text-[#98c379] dark:text-[#98c379]">'Tech & Negócios'</span>,
-  skills: [
-    <span class="text-[#98c379] dark:text-[#98c379]">'Power BI'</span>, 
-    <span class="text-[#98c379] dark:text-[#98c379]">'Full Stack'</span>,
-    <span class="text-[#98c379] dark:text-[#98c379]">'Admin'</span>
-  ],
-  isAvailable: <span class="text-[#d19a66] dark:text-[#d19a66]">true</span>,
-  connect: <span class="text-[#c678dd] dark:text-[#c678dd]">() =></span> <span class="text-[#e06c75] dark:text-[#e06c75]">console</span>.<span class="text-[#56b6c2] dark:text-[#56b6c2]">log</span>(<span class="text-[#98c379] dark:text-[#98c379]">'Lets talk!'</span>)
-};</code></pre>
+
+                        <div class="p-8">
+                            <div class="w-full h-64 rounded-xl mb-8 overflow-hidden border border-white/10 shadow-inner relative group-hover:scale-[1.02] transition-transform duration-500">
+                                <img src="perfil.jpg" alt="Kássio Serpa" class="w-full h-full object-cover grayscale brightness-90 hover:grayscale-0 hover:brightness-100 transition-all duration-700" onerror="this.src='https://via.placeholder.com/400x600?text=Kassio+Serpa'">
+                                <div class="absolute inset-0 bg-blue-500/10 mix-blend-overlay"></div>
+                            </div>
+
+                            <pre class="text-[13px] font-mono text-blue-100/80 leading-relaxed overflow-x-auto"><code class="block">
+<span class="text-indigo-400">SELECT</span> * <span class="text-indigo-400">FROM</span> users.kassio_serpa
+<span class="text-indigo-400">WHERE</span> skills <span class="text-indigo-400">IN</span> (<span class="text-emerald-400">'SQL'</span>, <span class="text-emerald-400">'Python'</span>, <span class="text-emerald-400">'BI'</span>)
+<span class="text-indigo-400">AND</span> vision = <span class="text-emerald-400">'Strategic Data'</span>;
+
+<span class="text-slate-500">-- Executing transformation...</span>
+<span class="text-indigo-400">UPDATE</span> business_value 
+<span class="text-indigo-400">SET</span> insights = <span class="text-emerald-400">'Unlimited'</span>;</code></pre>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="projetos" class="py-16 sm:py-24 px-5 sm:px-6 max-w-7xl mx-auto">
-        <div class="flex items-center gap-4 sm:gap-6 mb-12 sm:mb-16 reveal">
-            <h2 class="text-2xl sm:text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center">
-                <span class="text-blue-600 dark:text-blue-400 font-mono text-xl sm:text-2xl md:text-3xl mr-3 sm:mr-4 opacity-80">01.</span> 
-                <span data-i18n="proj_title">Projetos em Destaque</span>
+    <section id="projetos" class="py-24 px-6 max-w-7xl mx-auto">
+        <div class="flex items-center gap-6 mb-20 reveal">
+            <h2 class="text-4xl md:text-6xl font-black text-slate-900 dark:text-white tracking-tight flex items-center">
+                <span class="text-blue-500 font-mono text-3xl mr-4 opacity-50">01.</span> 
+                <span data-i18n="proj_title">Projetos</span>
             </h2>
-            <div class="h-px bg-gradient-to-r from-slate-300 to-transparent dark:from-slate-700 flex-grow"></div>
+            <div class="h-[2px] bg-gradient-to-r from-blue-500/50 to-transparent flex-grow"></div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10">
-            
-            <!-- Projeto 1: Davincix -->
-            <div class="reveal tilt-card glass rounded-3xl p-6 sm:p-8 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/10 group flex flex-col h-full relative overflow-hidden bg-white/40 dark:bg-[#111827]/40 border-slate-200 dark:border-white/5">
-                <div class="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-0 tilt-bg"></div>
-                <div class="flex justify-between items-start mb-6 sm:mb-8 relative z-10 tilt-content">
-                    <div class="p-3 sm:p-4 bg-white dark:bg-slate-800 rounded-xl sm:rounded-2xl text-blue-600 dark:text-blue-400 shadow-sm border border-slate-100 dark:border-slate-700">
-                        <i class="fas fa-graduation-cap text-2xl sm:text-3xl"></i>
+        <!-- Categoria 1: Engenharia & Programação -->
+        <div class="mb-20">
+            <h3 class="text-xl font-bold text-blue-500 mb-10 flex items-center gap-3 reveal" data-i18n="proj_programming">
+                <i class="fas fa-code"></i> Engenharia & Programação FullStack
+            </h3>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Projeto: Davincix -->
+                <div class="reveal tilt-card glass shimmer-effect rounded-[2.5rem] p-8 transition-all duration-500 hover:shadow-[0_20px_50px_rgba(59,130,246,0.15)] group flex flex-col h-full relative overflow-hidden bg-white/40 dark:bg-slate-900/40 border-slate-200 dark:border-white/5">
+                    <div class="flex justify-between items-start mb-10 relative z-10">
+                        <div class="p-5 bg-white dark:bg-slate-800 rounded-2xl text-blue-500 shadow-xl border border-white/10">
+                            <i class="fas fa-layer-group text-3xl"></i>
+                        </div>
+                        <div class="flex space-x-5 text-2xl text-slate-400">
+                            <a href="https://github.com/kassioserpa" target="_blank" class="hover:text-blue-500 transition-all hover:scale-125"><i class="fab fa-github"></i></a>
+                            <button onclick="openModal('Davincix FullStack', './projects/davincix/index.html')" class="hover:text-blue-500 transition-all hover:scale-125"><i class="fas fa-expand-alt"></i></button>
+                        </div>
                     </div>
-                    <div class="flex space-x-3 sm:space-x-4 text-xl sm:text-2xl text-slate-500 dark:text-slate-400">
-                        <a href="https://github.com/kassioserpa" target="_blank" class="hover:text-slate-900 dark:hover:text-white transition-all hover:scale-110 p-1"><i class="fab fa-github"></i></a>
-                        <button onclick="openModal('Davincix', './projects/davincix/index.html')" class="hover:text-blue-600 dark:hover:text-blue-400 transition-all hover:scale-110 focus:outline-none p-1" title="Ver Aplicação"><i class="fas fa-external-link-alt"></i></button>
+                    <h3 class="text-3xl font-black mb-4 text-slate-900 dark:text-white group-hover:text-blue-500 transition-colors tracking-tight">Davincix FullStack</h3>
+                    <p class="text-slate-600 dark:text-slate-400 mb-10 leading-relaxed flex-grow text-lg font-light" data-i18n="davincix_desc">
+                        Plataforma completa de estudos para concursos públicos. Organização de cronogramas e gestão de conteúdo educacional escalável.
+                    </p>
+                    <div class="flex flex-wrap gap-3 mt-auto relative z-10">
+                        <span class="px-5 py-2 bg-blue-500/10 text-blue-500 rounded-full text-xs font-bold border border-blue-500/20">React / Redux</span>
+                        <span class="px-5 py-2 bg-orange-500/10 text-orange-500 rounded-full text-xs font-bold border border-orange-500/20">Firebase</span>
+                        <span class="px-5 py-2 bg-slate-500/10 text-slate-500 rounded-full text-xs font-bold border border-slate-500/20">Architecture</span>
                     </div>
-                </div>
-                <h3 class="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4 text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors relative z-10 tracking-tight tilt-content">Davincix</h3>
-                <p class="text-slate-600 dark:text-slate-400 text-sm sm:text-base mb-6 sm:mb-8 leading-relaxed flex-grow relative z-10 tilt-content" data-i18n="davincix_desc">
-                    Plataforma robusta de estudos para concursos públicos. Permite organização de cronogramas, simulados e gestão de conteúdo educacional de forma centralizada.
-                </p>
-                <div class="mb-6 sm:mb-8 relative z-10 tilt-content">
-                    <div class="text-xs sm:text-[13px] text-slate-700 dark:text-slate-300 font-mono bg-white/60 dark:bg-black/40 backdrop-blur-sm p-4 rounded-xl border border-slate-200/50 dark:border-white/5 border-l-4 border-l-blue-500 shadow-inner" data-i18n="davincix_chal">
-                        <span class="text-blue-600 dark:text-blue-400 font-bold">&gt; Desafio:</span> Gerir estado complexo de progresso dos alunos.<br>
-                        <span class="text-emerald-600 dark:text-emerald-400 font-bold mt-1 block">&gt; Solução:</span> Redux e Firebase para persistência real-time.
-                    </div>
-                </div>
-                <div class="flex flex-wrap gap-2 mt-auto relative z-10 tilt-content">
-                    <span class="flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-1.5 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-semibold border border-slate-200 dark:border-slate-700 shadow-sm"><i class="fab fa-react text-cyan-500 text-sm"></i> React</span>
-                    <span class="flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-1.5 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-semibold border border-slate-200 dark:border-slate-700 shadow-sm"><i class="fas fa-database text-yellow-500 text-sm"></i> Firebase</span>
-                    <span class="flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-1.5 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-semibold border border-slate-200 dark:border-slate-700 shadow-sm"><i class="fab fa-css3-alt text-blue-500 text-sm"></i> Tailwind</span>
                 </div>
             </div>
-
-            <!-- Projeto 2: Hello World Globe -->
-            <div class="reveal tilt-card glass rounded-3xl p-6 sm:p-8 transition-all duration-500 hover:shadow-2xl hover:shadow-cyan-500/10 group flex flex-col h-full relative overflow-hidden bg-white/40 dark:bg-[#111827]/40 border-slate-200 dark:border-white/5" style="transition-delay: 100ms;">
-                <div class="absolute inset-0 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-0 tilt-bg"></div>
-                
-                <div class="flex justify-between items-start mb-6 sm:mb-8 relative z-10 tilt-content">
-                    <div class="p-3 sm:p-4 bg-white dark:bg-slate-800 rounded-xl sm:rounded-2xl text-cyan-600 dark:text-cyan-400 shadow-sm border border-slate-100 dark:border-slate-700">
-                        <i class="fas fa-globe-europe text-2xl sm:text-3xl"></i>
-                    </div>
-                    <div class="flex space-x-3 sm:space-x-4 text-xl sm:text-2xl text-slate-500 dark:text-slate-400">
-                        <a href="https://github.com/kassioserpa" target="_blank" class="hover:text-slate-900 dark:hover:text-white transition-all hover:scale-110 p-1"><i class="fab fa-github"></i></a>
-                        <button onclick="openModal('Projeto Hello World', 'https://kassioserpa.github.io/HelloWord/')" class="hover:text-cyan-600 dark:hover:text-cyan-400 transition-all hover:scale-110 focus:outline-none p-1" title="Ver Aplicação Interativa"><i class="fas fa-external-link-alt"></i></button>
-                    </div>
-                </div>
-                
-                <h3 class="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4 text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors relative z-10 tracking-tight tilt-content">Projeto Hello World</h3>
-                
-                <p class="text-slate-600 dark:text-slate-400 text-sm sm:text-base mb-6 sm:mb-8 leading-relaxed flex-grow relative z-10 tilt-content" data-i18n="helloworld_desc">
-                    Globo interativo 3D com dados geopolíticos, fronteiras vetoriais e integração com APIs de Inteligência Artificial para análises estratégicas e briefings de voz.
-                </p>
-                
-                <div class="mb-6 sm:mb-8 relative z-10 tilt-content">
-                    <div class="text-xs sm:text-[13px] text-slate-700 dark:text-slate-300 font-mono bg-white/60 dark:bg-black/40 backdrop-blur-sm p-4 rounded-xl border border-slate-200/50 dark:border-white/5 border-l-4 border-l-cyan-500 shadow-inner" data-i18n="helloworld_chal">
-                        <span class="text-cyan-600 dark:text-cyan-400 font-bold">&gt; Foco:</span> Renderização WebGL e IA.<br>
-                        <span class="text-blue-600 dark:text-blue-400 font-bold mt-1 block">&gt; Features:</span> Three.js, GSAP, REST Countries e GeoJSON.
-                    </div>
-                </div>
-                
-                <div class="flex flex-wrap gap-2 mt-auto relative z-10 tilt-content">
-                    <span class="flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-1.5 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-semibold border border-slate-200 dark:border-slate-700 shadow-sm"><i class="fas fa-cube text-purple-500 text-sm"></i> Three.js</span>
-                    <span class="flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-1.5 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-semibold border border-slate-200 dark:border-slate-700 shadow-sm"><i class="fas fa-brain text-cyan-500 text-sm"></i> NLP & TTS APIs</span>
-                    <span class="flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-1.5 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-semibold border border-slate-200 dark:border-slate-700 shadow-sm"><i class="fab fa-js text-yellow-500 text-sm"></i> GSAP</span>
-                </div>
-            </div>
-
         </div>
-    </section>
 
-    <section class="py-16 sm:py-24 px-5 sm:px-6 max-w-7xl mx-auto border-t border-slate-200/60 dark:border-slate-800/60 relative">
-        <div class="reveal flex flex-col items-center mb-12 sm:mb-16">
-            <h3 class="text-2xl sm:text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight" data-i18n="skills_title">Minhas Competências</h3>
-            <div class="w-20 sm:w-24 h-1 bg-gradient-to-r from-blue-500 to-emerald-500 mt-4 sm:mt-6 rounded-full"></div>
-        </div>
-        
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-24 relative z-10">
-            <div class="reveal bg-white/40 dark:bg-slate-900/40 backdrop-blur-sm p-6 sm:p-10 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-lg shadow-slate-200/20 dark:shadow-none">
-                <h4 class="text-lg sm:text-xl font-bold mb-8 flex items-center gap-3 text-slate-900 dark:text-white">
-                    <i class="fas fa-code text-blue-500"></i> <span data-i18n="tech_stack">Tecnologia & Dados</span>
-                </h4>
-                <div class="grid grid-cols-2 sm:grid-cols-3 gap-y-8 gap-x-4 justify-items-center">
-                    <div class="group flex flex-col items-center gap-3 cursor-default"><div class="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center border border-slate-100 dark:border-slate-700 group-hover:-translate-y-2 group-hover:border-orange-500/50 transition-all duration-300"><i class="fab fa-html5 text-3xl sm:text-4xl text-slate-400 group-hover:text-orange-500 transition-colors"></i></div><span class="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400">HTML5</span></div>
-                    <div class="group flex flex-col items-center gap-3 cursor-default"><div class="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center border border-slate-100 dark:border-slate-700 group-hover:-translate-y-2 group-hover:border-blue-500/50 transition-all duration-300"><i class="fab fa-css3-alt text-3xl sm:text-4xl text-slate-400 group-hover:text-blue-500 transition-colors"></i></div><span class="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400">CSS3</span></div>
-                    <div class="group flex flex-col items-center gap-3 cursor-default"><div class="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center border border-slate-100 dark:border-slate-700 group-hover:-translate-y-2 group-hover:border-yellow-400/50 transition-all duration-300"><i class="fab fa-js text-3xl sm:text-4xl text-slate-400 group-hover:text-yellow-400 transition-colors"></i></div><span class="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400">JavaScript</span></div>
-                    <div class="group flex flex-col items-center gap-3 cursor-default"><div class="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center border border-slate-100 dark:border-slate-700 group-hover:-translate-y-2 group-hover:border-cyan-400/50 transition-all duration-300"><i class="fab fa-react text-3xl sm:text-4xl text-slate-400 group-hover:text-cyan-400 transition-colors"></i></div><span class="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400">React</span></div>
-                    <div class="group flex flex-col items-center gap-3 cursor-default"><div class="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center border border-slate-100 dark:border-slate-700 group-hover:-translate-y-2 group-hover:border-yellow-600/50 transition-all duration-300"><i class="fas fa-chart-bar text-3xl sm:text-4xl text-slate-400 group-hover:text-yellow-600 transition-colors"></i></div><span class="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400">Power BI</span></div>
-                    <div class="group flex flex-col items-center gap-3 cursor-default"><div class="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center border border-slate-100 dark:border-slate-700 group-hover:-translate-y-2 group-hover:border-slate-900/50 dark:group-hover:border-white/50 transition-all duration-300"><i class="fab fa-github text-3xl sm:text-4xl text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors"></i></div><span class="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400">Git</span></div>
-                </div>
-            </div>
-
-            <div class="reveal bg-white/40 dark:bg-slate-900/40 backdrop-blur-sm p-6 sm:p-10 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-lg shadow-slate-200/20 dark:shadow-none" style="transition-delay: 150ms;">
-                <h4 class="text-lg sm:text-xl font-bold mb-8 flex items-center gap-3 text-slate-900 dark:text-white">
-                    <i class="fas fa-briefcase text-emerald-500"></i> <span data-i18n="admin_stack">Gestão Administrativa</span>
-                </h4>
-                <div class="grid grid-cols-2 gap-y-8 gap-x-4 sm:gap-x-6 justify-items-center">
-                    <div class="group flex flex-col items-center gap-3 sm:gap-4 text-center cursor-default">
-                        <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center group-hover:bg-emerald-500 group-hover:scale-110 transition-all duration-300"><i class="fas fa-file-signature text-2xl sm:text-3xl text-emerald-600 dark:text-emerald-400 group-hover:text-white transition-colors"></i></div>
-                        <span class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 leading-tight" data-i18n="skill_contracts">Contratos &<br>Licitações</span>
+        <!-- Categoria 2: Data Analytics & BI -->
+        <div>
+            <h3 class="text-xl font-bold text-emerald-500 mb-10 flex items-center gap-3 reveal" data-i18n="proj_bi">
+                <i class="fas fa-chart-line"></i> Data Analytics & BI Engineering
+            </h3>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Projeto: Global Intelligence -->
+                <div class="reveal tilt-card glass shimmer-effect rounded-[2.5rem] p-8 transition-all duration-500 hover:shadow-[0_20px_50px_rgba(16,185,129,0.15)] group flex flex-col h-full relative overflow-hidden bg-white/40 dark:bg-slate-900/40 border-slate-200 dark:border-white/5">
+                    <div class="flex justify-between items-start mb-10 relative z-10">
+                        <div class="p-5 bg-white dark:bg-slate-800 rounded-2xl text-emerald-500 shadow-xl border border-white/10">
+                            <i class="fas fa-database text-3xl"></i>
+                        </div>
+                        <div class="flex space-x-5 text-2xl text-slate-400">
+                            <a href="https://github.com/kassioserpa" target="_blank" class="hover:text-emerald-500 transition-all hover:scale-125"><i class="fab fa-github"></i></a>
+                            <button onclick="openModal('Global Data Intelligence', 'https://kassioserpa.github.io/HelloWord/')" class="hover:text-emerald-500 transition-all hover:scale-125"><i class="fas fa-expand-alt"></i></button>
+                        </div>
                     </div>
-                    <div class="group flex flex-col items-center gap-3 sm:gap-4 text-center cursor-default">
-                        <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center group-hover:bg-emerald-500 group-hover:scale-110 transition-all duration-300"><i class="fas fa-balance-scale text-2xl sm:text-3xl text-emerald-600 dark:text-emerald-400 group-hover:text-white transition-colors"></i></div>
-                        <span class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 leading-tight">Lei 14.133/21</span>
-                    </div>
-                    <div class="group flex flex-col items-center gap-3 sm:gap-4 text-center cursor-default">
-                        <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center group-hover:bg-emerald-500 group-hover:scale-110 transition-all duration-300"><i class="fas fa-tasks text-2xl sm:text-3xl text-emerald-600 dark:text-emerald-400 group-hover:text-white transition-colors"></i></div>
-                        <span class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 leading-tight" data-i18n="skill_mgmt">Gestão<br>Estratégica</span>
-                    </div>
-                    <div class="group flex flex-col items-center gap-3 sm:gap-4 text-center cursor-default">
-                        <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center group-hover:bg-emerald-500 group-hover:scale-110 transition-all duration-300"><i class="fas fa-clipboard-check text-2xl sm:text-3xl text-emerald-600 dark:text-emerald-400 group-hover:text-white transition-colors"></i></div>
-                        <span class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 leading-tight" data-i18n="skill_compliance">Compliance &<br>Processos</span>
+                    <h3 class="text-3xl font-black mb-4 text-slate-900 dark:text-white group-hover:text-emerald-500 transition-colors tracking-tight">Global Data Intelligence</h3>
+                    <p class="text-slate-600 dark:text-slate-400 mb-10 leading-relaxed flex-grow text-lg font-light" data-i18n="helloworld_desc">
+                        Ecossistema interativo 3D suportado por bases relacionais SQL. Visualização de tendências históricas e análise estatística regional.
+                    </p>
+                    <div class="flex flex-wrap gap-3 mt-auto relative z-10">
+                        <span class="px-5 py-2 bg-emerald-500/10 text-emerald-500 rounded-full text-xs font-bold border border-emerald-500/20">SQL Analytics</span>
+                        <span class="px-5 py-2 bg-blue-500/10 text-blue-500 rounded-full text-xs font-bold border border-blue-500/20">Three.js</span>
+                        <span class="px-5 py-2 bg-amber-500/10 text-amber-500 rounded-full text-xs font-bold border border-amber-500/20">Geo-BI</span>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer id="contato" class="pt-24 sm:pt-32 pb-12 text-center relative border-t border-slate-200/60 dark:border-slate-800/60 overflow-hidden">
-        <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[90%] sm:w-[80%] h-1/2 bg-blue-500/10 dark:bg-blue-600/10 blur-[80px] sm:blur-[100px] pointer-events-none rounded-t-full"></div>
-        <div class="relative z-10 max-w-3xl mx-auto px-5 sm:px-6 reveal">
-            <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4 sm:mb-6 text-slate-900 dark:text-white tracking-tight" data-i18n="footer_title">Vamos construir algo incrível?</h2>
-            <p class="text-slate-600 dark:text-slate-400 mb-10 sm:mb-12 text-base sm:text-lg md:text-xl font-light leading-relaxed" data-i18n="footer_desc">
-                Atualmente estou aberto a novas oportunidades e projetos. Quer tenha uma pergunta ou apenas queira dizer olá, farei o possível para responder!
-            </p>
-            <div class="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 mb-16 sm:mb-20">
-                <a href="mailto:kassioserpa21@icloud.com" class="px-6 py-4 sm:px-8 sm:py-4 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-300 flex items-center justify-center gap-3 active:scale-95 w-full sm:w-auto cursor-pointer">
-                    <i class="far fa-envelope text-xl"></i> <span data-i18n="btn_hello">Diga Olá</span>
-                </a>
-                <a href="https://wa.me/5561995764452" target="_blank" class="px-6 py-4 sm:px-8 sm:py-4 bg-white dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 font-semibold rounded-xl hover:border-green-500 dark:hover:border-green-500 transition-all duration-300 flex items-center justify-center gap-3 active:scale-95 group w-full sm:w-auto cursor-pointer">
-                    <i class="fab fa-whatsapp text-green-500 text-xl group-hover:scale-110 transition-transform"></i> WhatsApp
-                </a>
-            </div>
-            <div class="flex justify-center space-x-8 mb-10 text-slate-400">
-                <a href="https://github.com/kassioserpa" target="_blank" class="hover:text-slate-900 dark:hover:text-white hover:-translate-y-1 transition-all duration-300 p-2"><i class="fab fa-github text-3xl sm:text-2xl"></i></a>
-                <a href="https://www.linkedin.com/in/k%C3%A1ssioserpa/" target="_blank" class="hover:text-blue-600 dark:hover:text-blue-400 hover:-translate-y-1 transition-all duration-300 p-2"><i class="fab fa-linkedin text-3xl sm:text-2xl"></i></a>
-                <a href="https://www.instagram.com/kassiosantz/" target="_blank" class="hover:text-pink-600 dark:hover:text-pink-500 hover:-translate-y-1 transition-all duration-300 p-2"><i class="fab fa-instagram text-3xl sm:text-2xl"></i></a>
-            </div>
-            <p class="text-slate-500 text-xs sm:text-sm font-mono flex flex-col sm:flex-row items-center justify-center gap-2 mt-4 sm:mt-0">
-                <span class="flex items-center gap-1">
-                    <span data-i18n="made_with">Desenhado e desenvolvido com</span> 
-                    <i class="fas fa-heart text-red-500 animate-pulse"></i> 
-                </span>
-                <span>por Kássio Serpa © 2026</span>
-            </p>
-        </div>
-    </footer>
-
-    <!-- Modal de Visualização de Projetos -->
-    <div id="project-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-900/40 dark:bg-slate-900/80 backdrop-blur-md p-2 sm:p-4 md:p-10 opacity-0 transition-opacity duration-300" aria-modal="true" role="dialog">
-        <div class="relative w-full max-w-6xl h-[95vh] sm:h-[90vh] bg-white dark:bg-slate-900 rounded-xl sm:rounded-2xl shadow-2xl overflow-hidden flex flex-col transform scale-95 transition-transform duration-300 border border-slate-200 dark:border-slate-700" id="modal-content">
-            <div class="flex justify-between items-center px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900">
-                <h3 id="modal-title" class="text-base sm:text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2 sm:gap-3 truncate pr-2">
-                    <div class="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0 rounded-full bg-blue-100 dark:bg-blue-500/20 flex items-center justify-center text-blue-600 dark:text-blue-400">
-                        <i class="fas fa-laptop-code text-xs sm:text-sm"></i> 
-                    </div>
-                    <span id="modal-title-text" class="tracking-tight truncate">Projeto</span>
+    <!-- Modal Pro -->
+    <div id="project-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-950/90 backdrop-blur-xl p-4 opacity-0 transition-opacity duration-500">
+        <div class="relative w-full max-w-7xl h-[92vh] bg-slate-900 rounded-[2rem] shadow-2xl overflow-hidden flex flex-col transform scale-90 transition-transform duration-500 border border-white/10" id="modal-content">
+            <div class="flex justify-between items-center px-8 py-5 border-b border-white/5 bg-slate-900">
+                <h3 id="modal-title-text" class="text-xl font-bold text-white flex items-center gap-3">
+                    <i class="fas fa-window-maximize text-blue-500"></i> Projeto Preview
                 </h3>
-                <div class="flex gap-2 sm:gap-4 items-center flex-shrink-0">
-                    <a id="modal-external-link" href="#" target="_blank" class="text-xs sm:text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors bg-blue-50 dark:bg-blue-900/30 px-3 py-2 sm:px-4 sm:py-2 rounded-lg flex items-center gap-2 hover:bg-blue-100 dark:hover:bg-blue-900/50 cursor-pointer" title="Abrir em ecrã inteiro">
-                        <span class="hidden sm:inline">Tela Inteira</span> <i class="fas fa-external-link-alt text-[10px] sm:text-xs"></i>
+                <div class="flex gap-6 items-center">
+                    <a id="modal-external-link" href="#" target="_blank" class="text-sm font-bold text-blue-400 hover:text-white transition-colors flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-500/10">
+                        Full Screen <i class="fas fa-external-link-alt text-xs"></i>
                     </a>
-                    <button id="close-modal" class="text-slate-400 hover:text-red-500 transition-colors w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 cursor-pointer" aria-label="Fechar Modal">
-                        <i class="fas fa-times text-lg sm:text-xl"></i>
+                    <button id="close-modal" class="text-slate-400 hover:text-red-500 transition-colors text-2xl">
+                        <i class="fas fa-times-circle"></i>
                     </button>
                 </div>
             </div>
-            <div class="flex-grow w-full bg-slate-100 dark:bg-black relative">
-                <div id="modal-loader" class="absolute inset-0 flex flex-col items-center justify-center z-0 bg-white dark:bg-[#0a0f1c]">
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 border-4 border-blue-200 dark:border-blue-900 border-t-blue-600 dark:border-t-blue-500 rounded-full animate-spin mb-4"></div>
-                    <p class="text-slate-500 dark:text-slate-400 text-xs sm:text-sm font-mono animate-pulse">Iniciando ambiente...</p>
+            <div class="flex-grow w-full relative bg-black">
+                <div id="modal-loader" class="absolute inset-0 flex flex-col items-center justify-center z-50 bg-slate-950">
+                    <div class="w-16 h-16 border-4 border-blue-900 border-t-blue-500 rounded-full animate-spin mb-6"></div>
+                    <p class="text-blue-500 font-mono animate-pulse">Initializing Data Stream...</p>
                 </div>
-                <iframe id="modal-iframe" class="w-full h-full border-0 relative z-10 hidden" src="" title="Visualização do Projeto"></iframe>
+                <iframe id="modal-iframe" class="w-full h-full border-0 relative z-10 hidden" src=""></iframe>
             </div>
         </div>
     </div>
 
+    <footer id="contato" class="py-24 text-center relative border-t border-white/5 bg-slate-900/50 backdrop-blur-lg">
+        <div class="max-w-4xl mx-auto px-6 reveal">
+            <h2 class="text-4xl md:text-5xl font-black mb-10 text-slate-900 dark:text-white tracking-tighter" data-i18n="footer_title">Vamos transformar dados em decisões inteligentes?</h2>
+            
+            <div class="flex flex-wrap justify-center items-center gap-8 mb-20">
+                <a href="https://wa.me/5561995764452" target="_blank" class="mag-btn px-10 py-5 bg-emerald-600 text-white font-bold rounded-2xl hover:bg-emerald-700 transition-all flex items-center gap-3 active:scale-95 shadow-xl shadow-emerald-500/20">
+                    <i class="fab fa-whatsapp text-2xl"></i> <span data-i18n="btn_wa">WhatsApp</span>
+                </a>
+                <a href="mailto:kassioserpa21@icloud.com" class="mag-btn px-8 py-5 glass text-slate-900 dark:text-white font-bold rounded-2xl transition-all flex items-center gap-3 active:scale-95">
+                    <i class="far fa-envelope text-xl"></i> <span>Email</span>
+                </a>
+            </div>
+            
+            <p class="text-slate-500 font-mono text-sm">Kássio Serpa © 2026 • Crafted for Precision.</p>
+        </div>
+    </footer>
+
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const reveals = document.querySelectorAll('.reveal');
-            const revealOptions = { threshold: 0.1, rootMargin: "0px 0px -20px 0px" };
-            const revealOnScroll = new IntersectionObserver(function(entries, observer) {
-                entries.forEach(entry => {
-                    if (!entry.isIntersecting) return;
-                    entry.target.classList.add('active');
-                    observer.unobserve(entry.target);
+        // --- 1. Sistema de Partículas (Data Mesh) ---
+        const canvas = document.getElementById('data-mesh-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        const particleCount = 80;
+        let mouse = { x: null, y: null };
+
+        function initParticles() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particles = [];
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    size: Math.random() * 2 + 1
                 });
-            }, revealOptions);
-            reveals.forEach(reveal => revealOnScroll.observe(reveal));
-        });
-
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const mobileIcon = document.getElementById('mobile-icon');
-        const mobileLinks = document.querySelectorAll('.mobile-link');
-        let isMobileMenuOpen = false;
-
-        function toggleMobileMenu() {
-            isMobileMenuOpen = !isMobileMenuOpen;
-            if(isMobileMenuOpen) {
-                mobileMenu.classList.remove('opacity-0', 'pointer-events-none');
-                mobileIcon.classList.remove('fa-bars');
-                mobileIcon.classList.add('fa-times');
-                document.body.style.overflow = 'hidden';
-            } else {
-                mobileMenu.classList.add('opacity-0', 'pointer-events-none');
-                mobileIcon.classList.remove('fa-times');
-                mobileIcon.classList.add('fa-bars');
-                document.body.style.overflow = '';
             }
         }
-        mobileMenuBtn.addEventListener('click', toggleMobileMenu);
-        mobileLinks.forEach(link => link.addEventListener('click', toggleMobileMenu));
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const isDark = document.documentElement.classList.contains('dark');
+            const color = isDark ? 'rgba(59, 130, 246, ' : 'rgba(30, 41, 59, ';
+
+            particles.forEach((p, i) => {
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+                for (let j = i + 1; j < particles.length; j++) {
+                    const p2 = particles[j];
+                    const dx = p.x - p2.x;
+                    const dy = p.y - p2.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < 150) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = color + (1 - dist / 150) * 0.2 + ')';
+                        ctx.lineWidth = 0.5;
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
+                }
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = color + '0.5)';
+                ctx.fill();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+
+        window.addEventListener('resize', initParticles);
+        window.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
+        initParticles();
+        animateParticles();
+
+        // --- 2. Botões Magnéticos ---
+        const magButtons = document.querySelectorAll('.mag-btn');
+        magButtons.forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                btn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+            });
+            btn.addEventListener('mouseleave', () => {
+                btn.style.transform = `translate(0px, 0px)`;
+            });
+        });
+
+        // --- 3. Typing Effect ---
+        const typingEl = document.getElementById('typing-role');
+        const roles = ['Data Analyst', 'BI Engineer', 'Data Solutions Architect'];
+        let roleIdx = 0;
+        let charIdx = 0;
+        let isDeleting = false;
+
+        function type() {
+            const currentRole = roles[roleIdx];
+            if (isDeleting) {
+                typingEl.textContent = currentRole.substring(0, charIdx - 1);
+                charIdx--;
+            } else {
+                typingEl.textContent = currentRole.substring(0, charIdx + 1);
+                charIdx++;
+            }
+
+            let speed = isDeleting ? 50 : 150;
+            if (!isDeleting && charIdx === currentRole.length) {
+                speed = 2000;
+                isDeleting = true;
+            } else if (isDeleting && charIdx === 0) {
+                isDeleting = false;
+                roleIdx = (roleIdx + 1) % roles.length;
+                speed = 500;
+            }
+            setTimeout(type, speed);
+        }
+        type();
+
+        // --- 4. Core Logic ---
+        const reveals = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        reveals.forEach(r => observer.observe(r));
 
         window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            document.getElementById("scroll-progress").style.width = (winScroll / height) * 100 + "%";
+            
             const nav = document.getElementById('navbar');
-            if (window.scrollY > 10) {
-                nav.classList.add('bg-white/90', 'dark:bg-[#0a0f1c]/90', 'shadow-sm'); nav.classList.remove('glass');
-            } else {
-                nav.classList.remove('bg-white/90', 'dark:bg-[#0a0f1c]/90', 'shadow-sm'); nav.classList.add('glass');
-            }
+            if (window.scrollY > 50) nav.classList.add('py-2', 'bg-slate-900/90', 'backdrop-blur-xl');
+            else nav.classList.remove('py-2', 'bg-slate-900/90');
         });
 
         const modal = document.getElementById('project-modal');
         const modalContent = document.getElementById('modal-content');
-        const modalIframe = document.getElementById('modal-iframe');
-        const modalTitleText = document.getElementById('modal-title-text');
-        const modalExternalLink = document.getElementById('modal-external-link');
-        const closeModalBtn = document.getElementById('close-modal');
-        const modalLoader = document.getElementById('modal-loader');
+        const iframe = document.getElementById('modal-iframe');
+        const loader = document.getElementById('modal-loader');
 
         function openModal(title, url) {
-            modalTitleText.textContent = title;
-            modalExternalLink.href = url;
-            modalIframe.classList.add('hidden');
-            modalLoader.classList.remove('hidden');
-            modalIframe.src = url;
-            modal.classList.remove('hidden'); modal.classList.add('flex');
-            setTimeout(() => {
-                modal.classList.remove('opacity-0'); modalContent.classList.remove('scale-95'); document.body.style.overflow = 'hidden';
-            }, 20);
+            document.getElementById('modal-title-text').textContent = title;
+            document.getElementById('modal-external-link').href = url;
+            iframe.src = url;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => { modal.classList.add('opacity-100'); modalContent.classList.remove('scale-90'); }, 10);
+            document.body.style.overflow = 'hidden';
         }
 
         function closeModal() {
-            modal.classList.add('opacity-0'); modalContent.classList.add('scale-95'); document.body.style.overflow = '';
-            setTimeout(() => {
-                modal.classList.add('hidden'); modal.classList.remove('flex'); modalIframe.src = ''; 
-            }, 300);
+            modal.classList.remove('opacity-100');
+            modalContent.classList.add('scale-90');
+            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); iframe.src = ''; loader.classList.remove('hidden'); iframe.classList.add('hidden'); }, 500);
+            document.body.style.overflow = '';
         }
 
-        modalIframe.addEventListener('load', () => {
-            if (modalIframe.src && modalIframe.src !== window.location.href && modalIframe.src !== 'about:blank') {
-                modalLoader.classList.add('hidden'); modalIframe.classList.remove('hidden');
-            }
+        iframe.onload = () => { loader.classList.add('hidden'); iframe.classList.remove('hidden'); };
+        document.getElementById('close-modal').addEventListener('click', closeModal);
+
+        const themeBtn = document.querySelector('.theme-toggle-btn');
+        themeBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
         });
 
-        closeModalBtn.addEventListener('click', closeModal);
-        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal(); });
+        const dot = document.getElementById('cursor-dot');
+        const outline = document.getElementById('cursor-outline');
+        window.addEventListener('mousemove', (e) => {
+            dot.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+            outline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 500, fill: "forwards" });
+        });
 
-        const themeToggleBtns = document.querySelectorAll('.theme-toggle-btn');
-        const htmlElement = document.documentElement;
-
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            htmlElement.classList.add('dark');
-        } else if (localStorage.theme === 'light') { htmlElement.classList.remove('dark'); }
-
-        themeToggleBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                htmlElement.classList.toggle('dark');
-                localStorage.theme = htmlElement.classList.contains('dark') ? 'dark' : 'light';
+        const tiltCards = document.querySelectorAll('.tilt-card');
+        tiltCards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width - 0.5;
+                const y = (e.clientY - rect.top) / rect.height - 0.5;
+                card.style.transform = `perspective(1000px) rotateX(${y * -10}deg) rotateY(${x * 10}deg) scale3d(1.02, 1.02, 1.02)`;
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
             });
         });
 
+        // Traduções Atualizadas
         const translations = {
             pt: {
-                nav_about: "Sobre", nav_projects: "Projetos", nav_contact: "Contacto", hello: "Olá, o meu nome é", role: "Desenv. & Dados.",
-                desc: "Profissional multidisciplinar com experiência em gestão administrativa e processos de licitação, aliado a competências técnicas em análise de dados e desenvolvimento digital. Atuo na intersecção entre negócios e tecnologia, utilizando ferramentas como Power BI e programação full stack para criar soluções inovadoras.",
-                btn_projects: "Ver Projetos", btn_wa: "Falar no WhatsApp", proj_title: "Projetos em Destaque",
-                davincix_desc: "Plataforma robusta de estudos para concursos públicos. Permite organização de cronogramas, simulados e gestão de conteúdo educacional de forma centralizada.",
-                davincix_chal: "<span class='text-blue-600 dark:text-blue-400 font-bold'>&gt; Desafio:</span> Gerir estado complexo de progresso dos alunos.<br><span class='text-emerald-600 dark:text-emerald-400 font-bold block mt-1'>&gt; Solução:</span> Redux e Firebase para persistência real-time.",
-                helloworld_desc: "Globo interativo 3D com dados geopolíticos, fronteiras vetoriais e integração com APIs de Inteligência Artificial para análises estratégicas e briefings de voz.",
-                helloworld_chal: "<span class='text-cyan-600 dark:text-cyan-400 font-bold'>&gt; Foco:</span> Renderização WebGL e IA.<br><span class='text-blue-600 dark:text-blue-400 font-bold block mt-1'>&gt; Features:</span> Three.js, GSAP, REST Countries e GeoJSON.",
-                skills_title: "Minhas Competências", tech_stack: "Tecnologia & Dados", admin_stack: "Gestão Administrativa",
-                skill_contracts: "Contratos &<br>Licitações", skill_mgmt: "Gestão<br>Estratégica", skill_compliance: "Compliance &<br>Processos",
-                footer_title: "Vamos construir algo incrível?", footer_desc: "Atualmente estou aberto a novas oportunidades e projetos. Quer tenha uma pergunta ou apenas queira dizer olá, farei o possível para responder!",
-                btn_hello: "Diga Olá", made_with: "Desenhado e desenvolvido com"
+                nav_about: "Sobre", nav_projects: "Projetos", nav_contact: "Contacto", hello: "Olá, o meu nome é", role: "Data Analyst / BI Engineer",
+                desc: "Vamos transformar dados em decisões inteligentes? Sou especialista em engenharia de BI e análise estatística, focado em extrair valor real de ecossistemas de informação complexos.",
+                btn_projects: "Ver Projetos", btn_wa: "WhatsApp", proj_title: "Projetos",
+                proj_programming: "<i class='fas fa-code'></i> Engenharia & Programação FullStack",
+                proj_bi: "<i class='fas fa-chart-line'></i> Data Analytics & BI Engineering",
+                davincix_desc: "Plataforma completa de estudos para concursos públicos. Organização de cronogramas e gestão de conteúdo educacional escalável.",
+                helloworld_desc: "Ecossistema interativo 3D suportado por bases relacionais SQL. Visualização de tendências históricas e análise estatística regional.",
+                footer_title: "Vamos transformar dados em decisões inteligentes?", btn_hello: "Contactar"
             },
             en: {
-                nav_about: "About", nav_projects: "Projects", nav_contact: "Contact", hello: "Hello, my name is", role: "Dev & Data.",
-                desc: "Multidisciplinary professional with experience in administrative management and bidding processes, combined with technical skills in data analysis and digital development. I work at the intersection of business and technology, using tools like Power BI and full-stack programming to create innovative solutions.",
-                btn_projects: "View Projects", btn_wa: "Chat on WhatsApp", proj_title: "Featured Projects",
-                davincix_desc: "Robust study platform for public service exams. Allows organization of schedules, mock exams, and centralized management of educational content.",
-                davincix_chal: "<span class='text-blue-600 dark:text-blue-400 font-bold'>&gt; Challenge:</span> Manage complex student progress state.<br><span class='text-emerald-600 dark:text-emerald-400 font-bold block mt-1'>&gt; Solution:</span> Redux and Firebase for real-time persistence.",
-                helloworld_desc: "Interactive 3D globe with geopolitical data, vector borders, and integration with Artificial Intelligence APIs for strategic analysis and voice briefings.",
-                helloworld_chal: "<span class='text-cyan-600 dark:text-cyan-400 font-bold'>&gt; Focus:</span> WebGL rendering and AI.<br><span class='text-blue-600 dark:text-blue-400 font-bold block mt-1'>&gt; Features:</span> Three.js, GSAP, REST Countries and GeoJSON.",
-                skills_title: "My Skills", tech_stack: "Technology & Data", admin_stack: "Admin Management",
-                skill_contracts: "Contracts &<br>Bidding", skill_mgmt: "Strategic<br>Management", skill_compliance: "Compliance &<br>Processes",
-                footer_title: "Let's build something amazing?", footer_desc: "I am currently open to new opportunities and projects. Whether you have a question or just want to say hi, I'll try my best to get back to you!",
-                btn_hello: "Say Hello", made_with: "Designed & Built with"
+                nav_about: "About", nav_projects: "Projects", nav_contact: "Contact", hello: "Hello, my name is", role: "Data Analyst / BI Engineer",
+                desc: "Shall we turn data into intelligent decisions? I am a BI engineering and statistical analysis specialist, focused on extracting real value from complex information ecosystems.",
+                btn_projects: "View Projects", btn_wa: "WhatsApp", proj_title: "Projects",
+                proj_programming: "<i class='fas fa-code'></i> Engineering & FullStack Development",
+                proj_bi: "<i class='fas fa-chart-line'></i> Data Analytics & BI Engineering",
+                davincix_desc: "Complete study platform for public exams. Schedule organization and scalable educational content management.",
+                helloworld_desc: "Interactive 3D ecosystem supported by SQL relational bases. Historical trend visualization and regional statistical analysis.",
+                footer_title: "Shall we turn data into intelligent decisions?", btn_hello: "Contact"
             },
             es: {
-                nav_about: "Sobre Mí", nav_projects: "Proyectos", nav_contact: "Contacto", hello: "Hola, mi nombre es", role: "Desarrollo y Datos.",
-                desc: "Profesional multidisciplinario con experiencia en gestión administrativa y licitaciones, combinado con habilidades en análisis de datos y desarrollo digital. Trabajo en la intersección de los negocios y la tecnología, utilizando Power BI y programación full-stack para crear soluciones innovadoras.",
-                btn_projects: "Ver Proyectos", btn_wa: "Hablar por WhatsApp", proj_title: "Proyectos Destacados",
-                davincix_desc: "Plataforma de estudios para concursos públicos. Permite la organización de cronogramas, simulacros y gestión de contenido educativo de forma centralizada.",
-                davincix_chal: "<span class='text-blue-600 dark:text-blue-400 font-bold'>&gt; Desafío:</span> Gestionar el estado complejo del progreso del estudiante.<br><span class='text-emerald-600 dark:text-emerald-400 font-bold block mt-1'>&gt; Solución:</span> Redux y Firebase para persistencia real-time.",
-                helloworld_desc: "Globo interactivo 3D con datos geopolíticos, fronteras vectoriales e integración con APIs de Inteligencia Artificial para análisis estratégico y briefings de voz.",
-                helloworld_chal: "<span class='text-cyan-600 dark:text-cyan-400 font-bold'>&gt; Enfoque:</span> Renderizado WebGL e IA.<br><span class='text-blue-600 dark:text-blue-400 font-bold block mt-1'>&gt; Features:</span> Three.js, GSAP, REST Countries y GeoJSON.",
-                skills_title: "Mis Competencias", tech_stack: "Tecnología y Datos", admin_stack: "Gestión Administrativa",
-                skill_contracts: "Contratos y<br>Licitaciones", skill_mgmt: "Gestión<br>Estratégica", skill_compliance: "Compliance y<br>Procesos",
-                footer_title: "¿Vamos a construir algo increíble?", footer_desc: "Actualmente estoy abierto a nuevas oportunidades y proyectos. Ya sea que tengas una pregunta o solo quieras saludar, ¡haré lo posible por responder!",
-                btn_hello: "Di Hola", made_with: "Diseñado y Desarrollado con"
+                nav_about: "Sobre Mí", nav_projects: "Proyectos", nav_contact: "Contacto", hello: "Hola, mi nombre es", role: "Data Analyst / BI Engineer",
+                desc: "¿Transformamos datos en decisiones inteligentes? Soy especialista en ingeniería de BI y análisis estadístico, enfocado en extraer valor real de ecosistemas de informação complejos.",
+                btn_projects: "Ver Proyectos", btn_wa: "WhatsApp", proj_title: "Proyectos",
+                proj_programming: "<i class='fas fa-code'></i> Ingeniería y Programación FullStack",
+                proj_bi: "<i class='fas fa-chart-line'></i> Data Analytics y BI Engineering",
+                davincix_desc: "Plataforma completa de estudios para oposiciones. Organización de cronogramas y gestión de contenido educativo escalable.",
+                helloworld_desc: "Ecosistema interactivo 3D respaldado por bases relacionales SQL. Visualización de tendencias históricas y análisis estadístico regional.",
+                footer_title: "¿Transformamos datos en decisiones inteligentes?", btn_hello: "Contactar"
             }
         };
 
@@ -571,77 +536,6 @@
         const savedLang = localStorage.getItem('lang') || 'pt';
         langSwitches.forEach(s => s.value = savedLang);
         setLanguage(savedLang);
-
-        // --- SCRIPTS ADICIONAIS --- //
-        
-        // 1. Barra de Progresso de Scroll
-        window.addEventListener('scroll', () => {
-            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
-            document.getElementById("scroll-progress").style.width = scrolled + "%";
-        });
-
-        // 2. Cursor Personalizado Interativo
-        const cursorDot = document.getElementById('cursor-dot');
-        const cursorOutline = document.getElementById('cursor-outline');
-        
-        if (window.matchMedia("(pointer: fine)").matches) {
-            window.addEventListener('mousemove', (e) => {
-                const posX = e.clientX;
-                const posY = e.clientY;
-                cursorDot.style.left = `${posX}px`;
-                cursorDot.style.top = `${posY}px`;
-                
-                cursorOutline.animate({
-                    left: `${posX}px`,
-                    top: `${posY}px`
-                }, { duration: 400, fill: "forwards" });
-            });
-
-            const interactives = document.querySelectorAll('a, button, select, .cursor-pointer');
-            interactives.forEach(el => {
-                el.addEventListener('mouseenter', () => {
-                    cursorOutline.style.width = '60px';
-                    cursorOutline.style.height = '60px';
-                    cursorOutline.style.backgroundColor = 'rgba(59, 130, 246, 0.1)';
-                    cursorOutline.style.border = '2px solid rgba(59, 130, 246, 0.8)';
-                });
-                el.addEventListener('mouseleave', () => {
-                    cursorOutline.style.width = '40px';
-                    cursorOutline.style.height = '40px';
-                    cursorOutline.style.backgroundColor = 'transparent';
-                    cursorOutline.style.border = '2px solid rgba(59, 130, 246, 0.5)';
-                });
-            });
-        }
-
-        // 3. Efeito 3D (Tilt) nos Cartões de Projeto
-        const tiltCards = document.querySelectorAll('.tilt-card');
-        tiltCards.forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                
-                const rotateX = ((y - centerY) / centerY) * -8; // Rotação Máxima Y
-                const rotateY = ((x - centerX) / centerX) * 8;  // Rotação Máxima X
-                
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-            });
-            
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
-                card.style.transition = 'transform 0.5s ease';
-            });
-            
-            card.addEventListener('mouseenter', () => {
-                card.style.transition = 'none';
-            });
-        });
     </script>
 </body>
 </html>
