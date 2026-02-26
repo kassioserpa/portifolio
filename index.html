@@ -141,7 +141,7 @@
                 </div>
                 
                 <h1 class="text-5xl sm:text-7xl lg:text-8xl font-extrabold mb-6 text-slate-900 dark:text-white tracking-tight leading-[1.1]">
-                    Kássio Serpa.<br>
+                    Kássio Serpa<br>
                     <span id="typing-role" class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-emerald-400 min-h-[1em] block mt-2"></span>
                 </h1>
                 
@@ -255,6 +255,28 @@
                         <span class="px-3 py-1.5 bg-purple-500/10 text-purple-500 rounded-lg text-[10px] font-bold border border-purple-500/20 uppercase">JS/ES6</span>
                     </div>
                 </div>
+
+                <!-- Projeto: Contratos CGLI (Power BI) -->
+                <div class="reveal tilt-card glass shimmer-effect rounded-[2.5rem] p-8 transition-all duration-500 hover:shadow-[0_20px_50px_rgba(234,179,8,0.15)] group flex flex-col h-full relative overflow-hidden bg-white/40 dark:bg-slate-900/40 border-slate-200 dark:border-white/5" style="transition-delay: 100ms;">
+                    <div class="flex justify-between items-start mb-10 relative z-10">
+                        <div class="p-5 bg-white dark:bg-slate-800 rounded-2xl text-yellow-500 shadow-xl border border-white/10">
+                            <i class="fas fa-chart-pie text-3xl"></i>
+                        </div>
+                        <div class="flex space-x-5 text-2xl text-slate-400">
+                            <a href="https://github.com/kassioserpa/Dashboard-Gestao-de-Contratos-Publicos" target="_blank" class="hover:text-yellow-500 transition-all hover:scale-125"><i class="fab fa-github"></i></a>
+                            <button onclick="openModal('Dashboard - Gestão de Contratos', 'https://kassioserpa.github.io/Dashboard-Gestao-de-Contratos-Publicos/')" class="hover:text-yellow-500 transition-all hover:scale-125"><i class="fas fa-expand-alt"></i></button>
+                        </div>
+                    </div>
+                    <h3 class="text-3xl font-black mb-4 text-slate-900 dark:text-white group-hover:text-yellow-500 transition-colors tracking-tight">Dashboard - Gestão de Contratos</h3>
+                    <p class="text-slate-600 dark:text-slate-400 mb-10 leading-relaxed flex-grow text-lg font-light" data-i18n="cgli_desc">
+                        Painel interativo em Power BI para gestão e monitorização de contratos. Fornece insights críticos sobre execução financeira e métricas de desempenho.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mt-auto relative z-10">
+                        <span class="px-3 py-1.5 bg-yellow-500/10 text-yellow-600 dark:text-yellow-500 rounded-lg text-[10px] font-bold border border-yellow-500/20 uppercase">Power BI</span>
+                        <span class="px-3 py-1.5 bg-blue-500/10 text-blue-500 rounded-lg text-[10px] font-bold border border-blue-500/20 uppercase">DAX</span>
+                        <span class="px-3 py-1.5 bg-emerald-500/10 text-emerald-500 rounded-lg text-[10px] font-bold border border-emerald-500/20 uppercase">Data Modeling</span>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -280,7 +302,7 @@
                     <div class="w-16 h-16 border-4 border-blue-900 border-t-blue-500 rounded-full animate-spin mb-6"></div>
                     <p class="text-blue-500 font-mono animate-pulse">Initializing Data Stream...</p>
                 </div>
-                <iframe id="modal-iframe" class="w-full h-full border-0 relative z-10 hidden" src=""></iframe>
+                <iframe id="modal-iframe" class="w-full h-full border-0 relative z-10 hidden" src="" allowFullScreen="true"></iframe>
             </div>
         </div>
     </div>
@@ -493,6 +515,7 @@
                 proj_bi: "<i class='fas fa-chart-line'></i> Data Analytics & BI Engineering",
                 davincix_desc: "Plataforma completa de estudos para concursos públicos. Organização de cronogramas e gestão de conteúdo educacional escalável.",
                 g20_desc: "Dashboard analítico avançado para estados do G20. Utiliza pipelines de dados automatizados para consumo de APIs socioeconômicas e renderização 3D de alta performance.",
+                cgli_desc: "Painel interativo em Power BI para gestão e monitorização de contratos. Fornece insights críticos sobre execução financeira e métricas de desempenho.",
                 footer_title: "Vamos transformar dados em decisões inteligentes?", btn_hello: "Contactar"
             },
             en: {
@@ -503,6 +526,7 @@
                 proj_bi: "<i class='fas fa-chart-line'></i> Data Analytics & BI Engineering",
                 davincix_desc: "Complete study platform for public exams. Schedule organization and scalable educational content management.",
                 g20_desc: "Advanced analytical dashboard for G20 states. Uses automated data pipelines for socioeconomic API consumption and high-performance 3D rendering.",
+                cgli_desc: "Interactive Power BI dashboard for contract management and monitoring. Provides critical insights into financial execution and performance metrics.",
                 footer_title: "Shall we turn data into intelligent decisions?", btn_hello: "Contact"
             },
             es: {
@@ -513,6 +537,7 @@
                 proj_bi: "<i class='fas fa-chart-line'></i> Data Analytics y BI Engineering",
                 davincix_desc: "Plataforma completa de estudios para oposiciones. Organización de cronogramas y gestión de contenido educativo escalable.",
                 g20_desc: "Dashboard analítico avanzado para los estados del G20. Utiliza pipelines de dados automatizados para el consumo de APIs socioeconómicas y renderizado 3D de alto rendimiento.",
+                cgli_desc: "Panel interactivo en Power BI para la gestión y seguimiento de contratos. Proporciona información crítica sobre la ejecución financiera y métricas de rendimiento.",
                 footer_title: "¿Transformamos datos en decisiones inteligentes?", btn_hello: "Contactar"
             }
         };
