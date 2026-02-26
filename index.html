@@ -233,25 +233,26 @@
                 <i class="fas fa-chart-line"></i> Data Analytics & BI Engineering
             </h3>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                <!-- Projeto: Global Intelligence -->
-                <div class="reveal tilt-card glass shimmer-effect rounded-[2.5rem] p-8 transition-all duration-500 hover:shadow-[0_20px_50px_rgba(16,185,129,0.15)] group flex flex-col h-full relative overflow-hidden bg-white/40 dark:bg-slate-900/40 border-slate-200 dark:border-white/5">
+                <!-- Projeto: G20 Preview States -->
+                <div class="reveal tilt-card glass shimmer-effect rounded-[2.5rem] p-8 transition-all duration-500 hover:shadow-[0_20px_50px_rgba(59,130,246,0.15)] group flex flex-col h-full relative overflow-hidden bg-white/40 dark:bg-slate-900/40 border-slate-200 dark:border-white/5">
                     <div class="flex justify-between items-start mb-10 relative z-10">
-                        <div class="p-5 bg-white dark:bg-slate-800 rounded-2xl text-emerald-500 shadow-xl border border-white/10">
-                            <i class="fas fa-database text-3xl"></i>
+                        <div class="p-5 bg-white dark:bg-slate-800 rounded-2xl text-blue-500 shadow-xl border border-white/10">
+                            <i class="fas fa-chart-network text-3xl"></i>
                         </div>
                         <div class="flex space-x-5 text-2xl text-slate-400">
-                            <a href="https://github.com/kassioserpa" target="_blank" class="hover:text-emerald-500 transition-all hover:scale-125"><i class="fab fa-github"></i></a>
-                            <button onclick="openModal('Global Data Intelligence', 'https://kassioserpa.github.io/HelloWord/')" class="hover:text-emerald-500 transition-all hover:scale-125"><i class="fas fa-expand-alt"></i></button>
+                            <a href="https://github.com/kassioserpa" target="_blank" class="hover:text-blue-500 transition-all hover:scale-125"><i class="fab fa-github"></i></a>
+                            <button onclick="openModal('G20 Preview States', 'https://kassioserpa.github.io/G20-Preview-states/')" class="hover:text-blue-500 transition-all hover:scale-125"><i class="fas fa-expand-alt"></i></button>
                         </div>
                     </div>
-                    <h3 class="text-3xl font-black mb-4 text-slate-900 dark:text-white group-hover:text-emerald-500 transition-colors tracking-tight">Global Data Intelligence</h3>
-                    <p class="text-slate-600 dark:text-slate-400 mb-10 leading-relaxed flex-grow text-lg font-light" data-i18n="helloworld_desc">
-                        Ecossistema interativo 3D suportado por bases relacionais SQL. Visualização de tendências históricas e análise estatística regional.
+                    <h3 class="text-3xl font-black mb-4 text-slate-900 dark:text-white group-hover:text-blue-500 transition-colors tracking-tight">G20 Preview States</h3>
+                    <p class="text-slate-600 dark:text-slate-400 mb-10 leading-relaxed flex-grow text-lg font-light" data-i18n="g20_desc">
+                        Dashboard analítico avançado para estados do G20. Utiliza pipelines de dados automatizados para consumo de APIs socioeconômicas e renderização 3D de alta performance.
                     </p>
-                    <div class="flex flex-wrap gap-3 mt-auto relative z-10">
-                        <span class="px-5 py-2 bg-emerald-500/10 text-emerald-500 rounded-full text-xs font-bold border border-emerald-500/20">SQL Analytics</span>
-                        <span class="px-5 py-2 bg-blue-500/10 text-blue-500 rounded-full text-xs font-bold border border-blue-500/20">Three.js</span>
-                        <span class="px-5 py-2 bg-amber-500/10 text-amber-500 rounded-full text-xs font-bold border border-amber-500/20">Geo-BI</span>
+                    <div class="flex flex-wrap gap-2 mt-auto relative z-10">
+                        <span class="px-3 py-1.5 bg-blue-500/10 text-blue-500 rounded-lg text-[10px] font-bold border border-blue-500/20 uppercase">SQL & Pipelines</span>
+                        <span class="px-3 py-1.5 bg-indigo-500/10 text-indigo-500 rounded-lg text-[10px] font-bold border border-indigo-500/20 uppercase">Three.js</span>
+                        <span class="px-3 py-1.5 bg-emerald-500/10 text-emerald-500 rounded-lg text-[10px] font-bold border border-emerald-500/20 uppercase">API REST</span>
+                        <span class="px-3 py-1.5 bg-purple-500/10 text-purple-500 rounded-lg text-[10px] font-bold border border-purple-500/20 uppercase">JS/ES6</span>
                     </div>
                 </div>
             </div>
@@ -482,7 +483,7 @@
             });
         });
 
-        // Traduções Atualizadas
+        // Traduções
         const translations = {
             pt: {
                 nav_about: "Sobre", nav_projects: "Projetos", nav_contact: "Contacto", hello: "Olá, o meu nome é", role: "Data Analyst / BI Engineer",
@@ -491,7 +492,7 @@
                 proj_programming: "<i class='fas fa-code'></i> Engenharia & Programação FullStack",
                 proj_bi: "<i class='fas fa-chart-line'></i> Data Analytics & BI Engineering",
                 davincix_desc: "Plataforma completa de estudos para concursos públicos. Organização de cronogramas e gestão de conteúdo educacional escalável.",
-                helloworld_desc: "Ecossistema interativo 3D suportado por bases relacionais SQL. Visualização de tendências históricas e análise estatística regional.",
+                g20_desc: "Dashboard analítico avançado para estados do G20. Utiliza pipelines de dados automatizados para consumo de APIs socioeconômicas e renderização 3D de alta performance.",
                 footer_title: "Vamos transformar dados em decisões inteligentes?", btn_hello: "Contactar"
             },
             en: {
@@ -501,7 +502,7 @@
                 proj_programming: "<i class='fas fa-code'></i> Engineering & FullStack Development",
                 proj_bi: "<i class='fas fa-chart-line'></i> Data Analytics & BI Engineering",
                 davincix_desc: "Complete study platform for public exams. Schedule organization and scalable educational content management.",
-                helloworld_desc: "Interactive 3D ecosystem supported by SQL relational bases. Historical trend visualization and regional statistical analysis.",
+                g20_desc: "Advanced analytical dashboard for G20 states. Uses automated data pipelines for socioeconomic API consumption and high-performance 3D rendering.",
                 footer_title: "Shall we turn data into intelligent decisions?", btn_hello: "Contact"
             },
             es: {
@@ -511,7 +512,7 @@
                 proj_programming: "<i class='fas fa-code'></i> Ingeniería y Programación FullStack",
                 proj_bi: "<i class='fas fa-chart-line'></i> Data Analytics y BI Engineering",
                 davincix_desc: "Plataforma completa de estudios para oposiciones. Organización de cronogramas y gestión de contenido educativo escalable.",
-                helloworld_desc: "Ecosistema interactivo 3D respaldado por bases relacionales SQL. Visualización de tendencias históricas y análisis estadístico regional.",
+                g20_desc: "Dashboard analítico avanzado para los estados del G20. Utiliza pipelines de dados automatizados para el consumo de APIs socioeconómicas y renderizado 3D de alto rendimiento.",
                 footer_title: "¿Transformamos datos en decisiones inteligentes?", btn_hello: "Contactar"
             }
         };
